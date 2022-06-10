@@ -1,0 +1,86 @@
+﻿@page
+
+@using IdentityApp.Authorization;
+
+
+@model IndexModel
+@{
+    ViewData["Title"] = "Home page";
+}
+
+<head>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@3.8.0/dist/chart.min.js"></script>
+</head>
+
+<div class="text-center mb-5">
+    <h1 class="display-4">Welcome</h1>
+    <h2>To the INVOICES</h2>
+</div>
+
+
+@if (User.IsInRole(Constants.InvoiceAdminsRole))
+{
+    <div>
+        <canvas id="myChart"></canvas> @*renderer for a chart*@
+    </div>
+}
+
+@section Scripts {
+
+    <script>
+        const labels = [
+            'January',
+            'February',
+            'March',
+            'April',
+            'May',
+            'June',
+            'July',
+            'August',
+            'September',
+            'October',
+            'November',
+            'December'
+        ];
+
+        const data = {
+            labels : labels,
+            datasets: [
+                {
+                    label: "Revenue Submitted",
+                    backgroundColor: "#4169E1",
+                    borderColor: "#4169E1",
+                    cubicInterpolationMode: "monotone",
+                    data: @Json.Serialize(Model.revenueSubmitted) //display revenue models from cshtml.cs file
+                },
+                {
+                    label: "Revenue Approved",
+                    backgroundColor: "#89B69B",
+                    borderColor: "#89B69B",
+                    cubicInterpolationMode: "monotone",
+                    data: @Json.Serialize(Model.revenueApproved) //display revenue models from cshtml.cs file
+                },
+                {
+                    label: "Revenue Rejected",
+                    backgroundColor: "#ED2932",
+                    borderColor: "#ED2939",
+                    cubicInterpolationMode: "monotone",
+                    data: @Json.Serialize(Model.revenueRejected) //display revenue models from cshtml.cs file
+                },
+            ]
+        };
+
+        const config = {
+            type: 'line',
+            data: data,
+            options: {}
+        };
+
+        const myChart = new Chart(
+            document.getElementById('myChart'),
+            config
+        );
+
+    </script>
+
+}
